@@ -106,7 +106,7 @@ public class GameService {
         if(game.getStatus() == GameStatus.FINISHED) {
             int player1Stat = game.getWinner() == TicToe.DRAW || game.getWinner() == TicToe.O ? 0 : 1;
             int player2Stat = game.getWinner() == TicToe.DRAW || game.getWinner() == TicToe.X ? 0 : 1;
-            String url = "https://inotebookapi-nehals-projects-e27269ee.vercel.app/api/game/tttsave/" + game.getUserIdX() + "/" + player1Stat + "/" + game.getUserIdO() + "/" + player2Stat;
+            String url = "https://inotebookapi-nehals-projects-e27269ee.vercel.app/api/game/frnrsave/" + game.getUserIdX() + "/" + player1Stat + "/" + game.getUserIdO() + "/" + player2Stat;
             String response = restTemplate.getForObject(url, String.class);
             System.out.println(response);
 
