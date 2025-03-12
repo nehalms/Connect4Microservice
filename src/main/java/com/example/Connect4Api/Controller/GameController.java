@@ -33,7 +33,7 @@ public class GameController {
 
     @CrossOrigin(originPatterns = "*")
     @PostMapping("/start")
-    public ResponseEntity<Game> createGame(@RequestBody Player player, @RequestHeader(value = "auth-token", required = false) String token) throws InvalidTokenException {
+    public ResponseEntity<Game> createGame(@RequestBody Player player,  @CookieValue(value = "authToken", required = false) String token) throws InvalidTokenException {
         if(token == null) {
             throw new InvalidTokenException("Authenticate using valid token");
         }
@@ -45,7 +45,7 @@ public class GameController {
 
     @CrossOrigin(originPatterns = "*")
     @PostMapping("/connect")
-    public ResponseEntity<Game> joinGame(@RequestBody Player player, @RequestHeader(value = "auth-token", required = false) String token, @RequestParam String gameId) throws GameStartedException, GameNotFoundException, GameCompletedException, DuplicatePlayerException, InvalidTokenException {
+    public ResponseEntity<Game> joinGame(@RequestBody Player player, @CookieValue(value = "authToken", required = false) String token, @RequestParam String gameId) throws GameStartedException, GameNotFoundException, GameCompletedException, DuplicatePlayerException, InvalidTokenException {
         if(token == null) {
             throw new InvalidTokenException("Authenticate using valid token");
         }
@@ -59,7 +59,7 @@ public class GameController {
 
     @CrossOrigin(originPatterns = "*")
     @PostMapping("/getStatus")
-    public ResponseEntity<Game> getGame(@RequestBody Player player, @RequestHeader(value = "auth-token", required = false) String token, @RequestParam String gameId) throws InvalidTokenException, DuplicatePlayerException, GameNotFoundException, GameCompletedException {
+    public ResponseEntity<Game> getGame(@RequestBody Player player, @CookieValue(value = "authToken", required = false) String token, @RequestParam String gameId) throws InvalidTokenException, DuplicatePlayerException, GameNotFoundException, GameCompletedException {
         if(token == null) {
             throw new InvalidTokenException("Authenticate using valid token");
         }
@@ -71,7 +71,7 @@ public class GameController {
 
     @CrossOrigin(originPatterns = "*")
     @PostMapping("/gameplay")
-    public ResponseEntity<Game> playGame(@RequestHeader(value = "auth-token", required = false) String token, @RequestBody GamePlay gamePlay) throws GameCompletedException, GameNotFoundException, WaitingException, InvalidTokenException {
+    public ResponseEntity<Game> playGame(@CookieValue(value = "authToken", required = false) String token, @RequestBody GamePlay gamePlay) throws GameCompletedException, GameNotFoundException, WaitingException, InvalidTokenException {
         if(token == null) {
             throw new InvalidTokenException("Authenticate using valid token");
         }
@@ -87,11 +87,12 @@ public class GameController {
 
     @CrossOrigin(originPatterns = "*")
     @PostMapping("/reset")
-    public ResponseEntity<Game> newGame(@RequestHeader(value = "auth-token", required = false) String token, @RequestParam String gameId) throws GameStartedException, GameNotFoundException, InvalidTokenException {
+    public ResponseEntity<Game> newGame(@CookieValue(value = "authToken", required = false) String token, @RequestParam String gameId) throws GameStartedException, GameNotFoundException, InvalidTokenException {
         if(token == null) {
             throw new InvalidTokenException("Authenticate using valid token");
         }
-        gameService.authenticateUser(token);Game game = gameService.resetBoard(gameId);
+        gameService.authenticateUser(token);
+        Game game = gameService.resetBoard(gameId);
         log.info("New Game started: {}", game);
         String destination = "/topic/resetGame/" + game.getGameId();
         simpMessagingTemplate.convertAndSend(destination, game);
