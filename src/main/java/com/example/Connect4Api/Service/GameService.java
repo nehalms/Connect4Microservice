@@ -5,6 +5,7 @@ import com.example.Connect4Api.Model.*;
 import com.example.Connect4Api.Storage.GameStorage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Async;
@@ -13,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 @NoArgsConstructor
 public class GameService {
@@ -227,9 +229,9 @@ public class GameService {
         String apiKey = environment.getProperty("APIKEY");
         String url = environment.getProperty("Backend_URL") + "/game/authenticateUser/" + token + "/" + apiKey;
         String response = restTemplate.getForObject(url, String.class);
-        System.out.println("Authenticated User : " + response);
+        log.info("User Authenticated: {}", response);
         if(response.equalsIgnoreCase("false")){
-            throw new InvalidTokenException("Authenticate using valid token");
+            throw new InvalidTokenException("User Authentication Failed");
         }
     }
 }

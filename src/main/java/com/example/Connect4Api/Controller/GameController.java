@@ -34,6 +34,7 @@ public class GameController {
     @CrossOrigin(originPatterns = "*")
     @PostMapping("/start")
     public ResponseEntity<Game> createGame(@RequestBody Player player,  @CookieValue(value = "authToken", required = false) String token) throws InvalidTokenException {
+        log.info("Recieved Auth-token : {}", token);
         if(token == null) {
             throw new InvalidTokenException("Authenticate using valid token");
         }
