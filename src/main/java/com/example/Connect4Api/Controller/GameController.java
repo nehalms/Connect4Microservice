@@ -32,8 +32,7 @@ public class GameController {
     }
 
     @PostMapping("/start")
-    public ResponseEntity<Game> createGame(@RequestBody Player player,  @CookieValue(value = "authToken", required = false) String token) throws InvalidTokenException {
-        log.info("Recieved Auth-token : {}", token);
+    public ResponseEntity<Game> createGame(@RequestBody Player player,  @RequestHeader(value = "authToken", required = false) String token) throws InvalidTokenException {
         if(token == null) {
             throw new InvalidTokenException("Authenticate using valid token");
         }
@@ -44,7 +43,7 @@ public class GameController {
     }
 
     @PostMapping("/connect")
-    public ResponseEntity<Game> joinGame(@RequestBody Player player, @CookieValue(value = "authToken", required = false) String token, @RequestParam String gameId) throws GameStartedException, GameNotFoundException, GameCompletedException, DuplicatePlayerException, InvalidTokenException {
+    public ResponseEntity<Game> joinGame(@RequestBody Player player, @RequestHeader(value = "authToken", required = false) String token, @RequestParam String gameId) throws GameStartedException, GameNotFoundException, GameCompletedException, DuplicatePlayerException, InvalidTokenException {
         if(token == null) {
             throw new InvalidTokenException("Authenticate using valid token");
         }
@@ -57,7 +56,7 @@ public class GameController {
     }
 
     @PostMapping("/getStatus")
-    public ResponseEntity<Game> getGame(@RequestBody Player player, @CookieValue(value = "authToken", required = false) String token, @RequestParam String gameId) throws InvalidTokenException, DuplicatePlayerException, GameNotFoundException, GameCompletedException {
+    public ResponseEntity<Game> getGame(@RequestBody Player player, @RequestHeader(value = "authToken", required = false) String token, @RequestParam String gameId) throws InvalidTokenException, DuplicatePlayerException, GameNotFoundException, GameCompletedException {
         if(token == null) {
             throw new InvalidTokenException("Authenticate using valid token");
         }
@@ -68,7 +67,7 @@ public class GameController {
     }
 
     @PostMapping("/gameplay")
-    public ResponseEntity<Game> playGame(@CookieValue(value = "authToken", required = false) String token, @RequestBody GamePlay gamePlay) throws GameCompletedException, GameNotFoundException, WaitingException, InvalidTokenException {
+    public ResponseEntity<Game> playGame(@RequestHeader(value = "authToken", required = false) String token, @RequestBody GamePlay gamePlay) throws GameCompletedException, GameNotFoundException, WaitingException, InvalidTokenException {
         if(token == null) {
             throw new InvalidTokenException("Authenticate using valid token");
         }
@@ -83,7 +82,7 @@ public class GameController {
 
 
     @PostMapping("/reset")
-    public ResponseEntity<Game> newGame(@CookieValue(value = "authToken", required = false) String token, @RequestParam String gameId) throws GameStartedException, GameNotFoundException, InvalidTokenException {
+    public ResponseEntity<Game> newGame(@RequestHeader(value = "authToken", required = false) String token, @RequestParam String gameId) throws GameStartedException, GameNotFoundException, InvalidTokenException {
         if(token == null) {
             throw new InvalidTokenException("Authenticate using valid token");
         }
