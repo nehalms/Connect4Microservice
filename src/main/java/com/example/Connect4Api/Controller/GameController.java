@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.example.Connect4Api.Service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -24,14 +25,12 @@ public class GameController {
     @Autowired
     public SimpMessagingTemplate simpMessagingTemplate;
 
-    @CrossOrigin(originPatterns = "*")
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         log.info("Server Status: Running");
         return new ResponseEntity<>("Hello render", HttpStatus.OK);
     }
 
-    @CrossOrigin(originPatterns = "*")
     @PostMapping("/start")
     public ResponseEntity<Game> createGame(@RequestBody Player player,  @CookieValue(value = "authToken", required = false) String token) throws InvalidTokenException {
         log.info("Recieved Auth-token : {}", token);
@@ -44,7 +43,6 @@ public class GameController {
         return ResponseEntity.ok(game);
     }
 
-    @CrossOrigin(originPatterns = "*")
     @PostMapping("/connect")
     public ResponseEntity<Game> joinGame(@RequestBody Player player, @CookieValue(value = "authToken", required = false) String token, @RequestParam String gameId) throws GameStartedException, GameNotFoundException, GameCompletedException, DuplicatePlayerException, InvalidTokenException {
         if(token == null) {
@@ -58,7 +56,6 @@ public class GameController {
         return ResponseEntity.ok(game);
     }
 
-    @CrossOrigin(originPatterns = "*")
     @PostMapping("/getStatus")
     public ResponseEntity<Game> getGame(@RequestBody Player player, @CookieValue(value = "authToken", required = false) String token, @RequestParam String gameId) throws InvalidTokenException, DuplicatePlayerException, GameNotFoundException, GameCompletedException {
         if(token == null) {
@@ -70,7 +67,6 @@ public class GameController {
         return ResponseEntity.ok(game);
     }
 
-    @CrossOrigin(originPatterns = "*")
     @PostMapping("/gameplay")
     public ResponseEntity<Game> playGame(@CookieValue(value = "authToken", required = false) String token, @RequestBody GamePlay gamePlay) throws GameCompletedException, GameNotFoundException, WaitingException, InvalidTokenException {
         if(token == null) {
@@ -86,7 +82,6 @@ public class GameController {
     }
 
 
-    @CrossOrigin(originPatterns = "*")
     @PostMapping("/reset")
     public ResponseEntity<Game> newGame(@CookieValue(value = "authToken", required = false) String token, @RequestParam String gameId) throws GameStartedException, GameNotFoundException, InvalidTokenException {
         if(token == null) {
